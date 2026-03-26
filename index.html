@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz · Descubre tu Fenotipo SOP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────── */
+/* CONFIG: reemplaza estas dos líneas          */
+/* ─────────────────────────────────────────── */
+/* Ver instrucciones al final del archivo      */
+/* ─────────────────────────────────────────── */
+
+:root {
+  --terra:        #C4674A;
+  --terra-light:  #F0DDD6;
+  --terra-dark:   #A04E35;
+  --sage:         #6B8F71;
+  --sage-light:   #E3EDE4;
+  --cream:        #FAF7F2;
+  --cream-dark:   #EDE7DF;
+  --ink:          #2C2A27;
+  --ink-soft:     #4A4744;
+  --muted:        #7A7570;
+  --line:         rgba(44,42,39,0.11);
+  --gold:         #B8943F;
+  --gold-light:   #F5EDD6;
+  --slate:        #5A6E8A;
+  --slate-light:  #E3E8F0;
+  --purple-light: #EDE8F5;
+  --purple:       #7B5EA7;
+  --white:        #FFFFFF;
+  --shadow:       0 2px 16px rgba(44,42,39,0.07);
+  --shadow-lg:    0 8px 40px rgba(44,42,39,0.12);
+  --radius:       16px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ─── SCREENS ─────────────────────────────── */
+.screen { display: none; min-height: 100vh; min-height: 100dvh; width: 100%; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ─── ANIMATIONS ──────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.25; transform: scale(0.75); }
+  50%       { opacity: 1;    transform: scale(1.1); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════════ */
+/*  PANTALLA 0 · BIENVENIDA                   */
+/* ═══════════════════════════════════════════ */
+#s-welcome {
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+#s-welcome::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 420px; height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--terra-light) 0%, transparent 68%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+#s-welcome::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: -80px;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--sage-light) 0%, transparent 68%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.welcome-card {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 2.75rem 2.25rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.55s ease-out;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 18px;
+}
+.eyebrow::before {
+  content: '';
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--terra);
+}
+
+.welcome-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 34px;
+  line-height: 1.18;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+.welcome-title em {
+  font-style: italic;
+  color: var(--terra);
+}
+
+.welcome-desc {
+  font-size: 14.5px;
+  color: var(--muted);
+  line-height: 1.72;
+  margin-bottom: 24px;
+}
+
+.welcome-stats {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  border-top: 0.5px solid var(--line);
+  border-bottom: 0.5px solid var(--line);
+  padding: 16px 0;
+}
+.stat {
+  flex: 1;
+  text-align: center;
+  padding: 0 12px;
+}
+.stat + .stat {
+  border-left: 0.5px solid var(--line);
+}
+.stat-val {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px;
+  color: var(--terra);
+  display: block;
+  line-height: 1.1;
+}
+.stat-lbl {
+  font-size: 10.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-top: 3px;
+  display: block;
+}
+
+.welcome-notice {
+  background: var(--cream);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 22px;
+}
+.welcome-notice strong { color: var(--ink-soft); }
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 15px 24px;
+  background: var(--terra);
+  color: var(--white);
+  border: none;
+  border-radius: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  letter-spacing: 0.2px;
+}
+.btn-primary:hover {
+  background: var(--terra-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(196,103,74,0.32);
+}
+.btn-primary:active { transform: translateY(0); }
+.btn-primary svg { flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════ */
+/*  PANTALLA 1 · PREGUNTA                     */
+/* ═══════════════════════════════════════════ */
+#s-question { background: var(--cream); }
+
+.q-top-bar {
+  background: var(--white);
+  border-bottom: 0.5px solid var(--line);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.btn-back {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 0.5px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+  font-size: 15px;
+}
+.btn-back:hover { border-color: var(--terra); color: var(--terra); }
+
+.progress-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+}
+.progress-track {
+  height: 3px;
+  background: var(--cream-dark);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--terra);
+  border-radius: 2px;
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.q-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.5rem 2rem;
+  max-width: 580px;
+  margin: 0 auto;
+  width: 100%;
+  animation: fadeUp 0.32s ease-out;
+}
+
+.q-block-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+  align-self: flex-start;
+}
+.tag-oa   { background: var(--slate-light); color: var(--slate); }
+.tag-ha   { background: var(--terra-light); color: var(--terra); }
+.tag-pcom { background: var(--sage-light);  color: var(--sage); }
+.tag-ir   { background: var(--gold-light);  color: var(--gold); }
+.tag-ctx  { background: var(--purple-light);color: var(--purple); }
+
+.q-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(22px, 4vw, 28px);
+  line-height: 1.3;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.q-hint {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 26px;
+  font-style: italic;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 22px;
+}
+
+.opt-btn {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--white);
+  border: 1.5px solid var(--line);
+  border-radius: 13px;
+  text-align: left;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: border-color 0.16s, background 0.16s, transform 0.14s;
+  position: relative;
+}
+.opt-btn:hover {
+  border-color: var(--terra);
+  background: #FBF3EF;
+  transform: translateX(4px);
+}
+.opt-btn.selected {
+  border-color: var(--terra);
+  background: var(--terra-light);
+  color: var(--ink);
+}
+
+.opt-letter {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  background: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--muted);
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: background 0.16s, border-color 0.16s, color 0.16s;
+}
+.opt-btn.selected .opt-letter,
+.opt-btn:hover .opt-letter {
+  background: var(--terra);
+  border-color: var(--terra);
+  color: var(--white);
+}
+
+.btn-next {
+  width: 100%;
+  padding: 15px 24px;
+  background: var(--terra);
+  color: var(--white);
+  border: none;
+  border-radius: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.22s, transform 0.22s, background 0.15s, box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-next.visible {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.btn-next:hover {
+  background: var(--terra-dark);
+  box-shadow: 0 6px 22px rgba(196,103,74,0.3);
+}
+
+/* ═══════════════════════════════════════════ */
+/*  PANTALLA 2 · CORREO                       */
+/* ═══════════════════════════════════════════ */
+#s-email {
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+}
+#s-email::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -80px;
+  width: 360px; height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--terra-light) 0%, transparent 68%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.email-card {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 2.75rem 2.25rem;
+  max-width: 460px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.45s ease-out;
+}
+
+.email-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  background: var(--terra-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.email-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  line-height: 1.22;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.email-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 26px;
+}
+
+.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.email-input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--cream);
+  outline: none;
+  transition: border-color 0.18s, background 0.18s;
+  margin-bottom: 6px;
+}
+.email-input:focus {
+  border-color: var(--terra);
+  background: var(--white);
+}
+.email-input::placeholder { color: var(--muted); opacity: 0.6; }
+
+.field-error {
+  font-size: 12px;
+  color: var(--terra);
+  min-height: 18px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.email-privacy {
+  font-size: 11.5px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.email-privacy svg { vertical-align: middle; margin-right: 4px; }
+
+/* ═══════════════════════════════════════════ */
+/*  PANTALLA 3 · CARGANDO                     */
+/* ═══════════════════════════════════════════ */
+#s-loading {
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--cream);
+}
+
+.loading-wrap { text-align: center; max-width: 300px; }
+
+.loading-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.dot {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  animation: pulse-dot 1.3s ease-in-out infinite;
+}
+.dot:nth-child(1) { background: var(--terra);  animation-delay: 0s; }
+.dot:nth-child(2) { background: var(--sage);   animation-delay: 0.22s; }
+.dot:nth-child(3) { background: var(--slate);  animation-delay: 0.44s; }
+
+.loading-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.loading-sub {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════ */
+/*  PANTALLA 4 · RESULTADO                    */
+/* ═══════════════════════════════════════════ */
+#s-result { flex-direction: column; }
+
+.result-hero {
+  padding: 48px 24px 36px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-out;
+}
+.result-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -30px; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 60px;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background: var(--cream);
+}
+
+/* Hero backgrounds per fenotipo */
+.rh-A  { background: linear-gradient(145deg, #FDF0EB 0%, #F2E0D5 100%); }
+.rh-B  { background: linear-gradient(145deg, #EBF2EC 0%, #DAE9DC 100%); }
+.rh-C  { background: linear-gradient(145deg, #EBF0F8 0%, #D9E4F4 100%); }
+.rh-D  { background: linear-gradient(145deg, #F8F3EA 0%, #EDE5D5 100%); }
+.rh-NC { background: linear-gradient(145deg, #F5F5F5 0%, #EBEBEB 100%); }
+
+.res-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+.rb-A  { background: #A0482E; color: #FDF0EB; }
+.rb-B  { background: #3A5E3D; color: #EBF2EC; }
+.rb-C  { background: #2A4A7A; color: #EBF0F8; }
+.rb-D  { background: #7A6020; color: #F8F3EA; }
+.rb-NC { background: #666;    color: #fff; }
+
+.res-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(26px, 5vw, 34px);
+  line-height: 1.18;
+  margin-bottom: 6px;
+}
+.rt-A  { color: #8A3A23; }
+.rt-B  { color: #3A5C3E; }
+.rt-C  { color: #2A406A; }
+.rt-D  { color: #6A5218; }
+.rt-NC { color: #444; }
+
+.res-subtitle {
+  font-size: 14px;
+  opacity: 0.7;
+}
+.rs-A  { color: #8A3A23; }
+.rs-B  { color: #3A5C3E; }
+.rs-C  { color: #2A406A; }
+.rs-D  { color: #6A5218; }
+.rs-NC { color: #555; }
+
+/* Criterio chips */
+.res-chips {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 13px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.chip-on-A  { background: rgba(196,103,74,0.15); color: var(--terra); }
+.chip-on-B  { background: rgba(107,143,113,0.15); color: var(--sage); }
+.chip-on-C  { background: rgba(90,110,138,0.18); color: var(--slate); }
+.chip-on-D  { background: rgba(184,148,63,0.18); color: var(--gold); }
+.chip-off   { background: rgba(44,42,39,0.06);   color: var(--muted); opacity: 0.6; }
+
+/* Result body */
+.res-body {
+  padding: 2.25rem 1.5rem 3rem;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
+  animation: fadeUp 0.45s 0.15s ease-out both;
+}
+
+.metabolic-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+.ms-con { background: var(--gold-light); color: #7A5E1A; }
+.ms-sin { background: var(--sage-light); color: #3A5C3E; }
+
+.res-text-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.5rem;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+.res-text-card p + p { margin-top: 12px; }
+.res-text-card strong { color: var(--ink); font-weight: 600; }
+
+.cta-card {
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+.cta-A  { background: var(--terra-light); color: #8A3A23; }
+.cta-B  { background: var(--sage-light);  color: #3A5C3E; }
+.cta-C  { background: var(--slate-light); color: #2A406A; }
+.cta-D  { background: var(--gold-light);  color: #6A5218; }
+.cta-NC { background: var(--cream-dark);  color: var(--ink-soft); }
+
+.disclaimer-card {
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  background: var(--cream);
+  border: 0.5px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.disclaimer-card strong { color: var(--ink-soft); }
+
+.restart-row {
+  text-align: center;
+  padding-bottom: 2rem;
+}
+.btn-restart {
+  background: transparent;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 24px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-restart:hover { border-color: var(--terra); color: var(--terra); }
+
+/* ─── API STATUS TOAST ─────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--ink);
+  color: var(--white);
+  font-size: 13px;
+  padding: 10px 20px;
+  border-radius: 30px;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 100;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ─── RESPONSIVE ──────────────────────────── */
+@media (max-width: 480px) {
+  .welcome-card, .email-card { padding: 2rem 1.5rem; }
+  .welcome-title { font-size: 28px; }
+  .q-body { padding: 1.5rem 1.25rem; }
+  .res-hero { padding: 36px 20px 30px; }
+  .res-body { padding: 1.75rem 1.25rem 2.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PANTALLA 0 · BIENVENIDA                   -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="screen active" id="s-welcome">
+  <div class="welcome-card">
+    <div class="eyebrow">Quiz clínico</div>
+    <h1 class="welcome-title">
+      Descubre tu<br>
+      <em>fenotipo SOP</em>
+    </h1>
+    <p class="welcome-desc">
+      No todas las mujeres con SOP son iguales. Este quiz utiliza los criterios de Rotterdam para orientar cuál de los 4 fenotipos corresponde mejor a tu perfil — y si hay componente metabólico asociado.
+    </p>
+    <div class="welcome-stats">
+      <div class="stat">
+        <span class="stat-val">14</span>
+        <span class="stat-lbl">Preguntas</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">4 min</span>
+        <span class="stat-lbl">Duración</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">4</span>
+        <span class="stat-lbl">Fenotipos</span>
+      </div>
+    </div>
+    <div class="welcome-notice">
+      <strong>Nota importante:</strong> Este quiz es una herramienta educativa, no un diagnóstico médico. El diagnóstico de SOP requiere evaluación clínica, estudios de laboratorio e imagen realizados por un profesional de la salud.
+    </div>
+    <button class="btn-primary" onclick="startQuiz()">
+      Comenzar quiz
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PANTALLA 1 · PREGUNTA                     -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="screen" id="s-question">
+  <div class="q-top-bar">
+    <button class="btn-back" onclick="goBack()" aria-label="Regresar">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+      </svg>
+    </button>
+    <div class="progress-group">
+      <div class="progress-meta">
+        <span id="progress-label">Pregunta 1 de 14</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="q-body" id="q-body">
+    <!-- Rendered dynamically -->
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PANTALLA 2 · CAPTURA DE CORREO            -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="screen" id="s-email">
+  <div class="email-card">
+    <div class="email-icon">✉️</div>
+    <h2 class="email-title">Tus respuestas<br>están listas</h2>
+    <p class="email-desc">
+      Ingresa tu correo para recibir tu perfil de fenotipo SOP con tus primeros pasos personalizados. Sin spam — solo información clínica relevante para tu caso.
+    </p>
+    <label class="field-label" for="email-input">Correo electrónico</label>
+    <input
+      class="email-input"
+      type="email"
+      id="email-input"
+      placeholder="tucorreo@ejemplo.com"
+      autocomplete="email"
+      inputmode="email"
+      onkeydown="if(event.key==='Enter') submitEmail()"
+    />
+    <span class="field-error" id="field-error"></span>
+    <p class="email-privacy">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      Tus datos están protegidos y nunca se venden a terceros.
+    </p>
+    <button class="btn-primary" onclick="submitEmail()">
+      Ver mi resultado
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PANTALLA 3 · CARGANDO                     -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="screen" id="s-loading">
+  <div class="loading-wrap">
+    <div class="loading-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <p class="loading-title">Analizando tu perfil</p>
+    <p class="loading-sub">Aplicando criterios Rotterdam<br>a tus respuestas…</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PANTALLA 4 · RESULTADO                    -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="screen" id="s-result">
+  <div class="result-hero" id="result-hero">
+    <!-- Rendered dynamically -->
+  </div>
+  <div class="res-body" id="result-body">
+    <!-- Rendered dynamically -->
+  </div>
+</div>
+
+<!-- Toast de notificación -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   CONFIGURACIÓN — EDITA ESTAS DOS VARIABLES
+   ════════════════════════════════════════════════════════
+   
+   OPCIÓN A (recomendada): Google Apps Script como proxy
+   ─────────────────────────────────────────────────────
+   1. Ve a script.google.com y crea un nuevo proyecto
+   2. Pega el código de Apps Script que está al final de
+      este archivo (en los comentarios)
+   3. Despliega como Web App (ejecutar como: yo,
+      acceso: cualquier persona)
+   4. Copia la URL y pégala en APPS_SCRIPT_URL
+   5. Deja BREVO_API_KEY vacío si usas Apps Script
+   
+   OPCIÓN B: Brevo API directo (puede haber CORS)
+   ─────────────────────────────────────────────────────
+   1. En Brevo → API Keys → crea una clave de solo
+      "Contactos" (write only)
+   2. Pégala en BREVO_API_KEY
+   3. Deja APPS_SCRIPT_URL vacío
+   ════════════════════════════════════════════════════ */
+
+const CONFIG = {
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwsgbr_HoLwuM4SxrEXWYbFsYlHTIEnv5ZxZ5P2T3q4u_Ay2S50ak746d2EgZKf84PI/exec',          // URL de tu Google Apps Script web app
+  BREVO_API_KEY:   '',          // Tu API key de Brevo (si usas opción B)
+  BREVO_LIST_ID:   3,           // ID de la lista en Brevo (número entero)
+};
+
+/* ════════════════════════════════════════════════════════
+   DATOS DE PREGUNTAS
+   ════════════════════════════════════════════════════════ */
+const QUESTIONS = [
+  {
+    id:'P1', blockLabel:'Ciclo y Ovulación', blockTag:'tag-oa',
+    text:'¿Con qué frecuencia te llega el período menstrual?',
+    hint: null,
+    opts:[
+      { t:'Cada 21 a 35 días, de forma regular',                       s:{} },
+      { t:'Cada 35 a 90 días (ciclos largos e irregulares)',           s:{OA:2} },
+      { t:'Menos de 8 períodos al año',                                s:{OA:3} },
+      { t:'No me ha llegado en más de 3 meses (sin embarazo)',        s:{OA:3} },
+    ]
+  },
+  {
+    id:'P2', blockLabel:'Ciclo y Ovulación', blockTag:'tag-oa',
+    text:'¿Notas signos de que estás ovulando durante el mes?',
+    hint:'moco cervical tipo clara de huevo, dolor leve a la mitad del ciclo, aumento de energía o libido',
+    opts:[
+      { t:'Sí, los noto con regularidad',                              s:{} },
+      { t:'A veces, pero no siempre',                                  s:{OA:1} },
+      { t:'Rara vez o nunca',                                          s:{OA:2} },
+      { t:'No sé identificarlos / nunca los he observado',            s:{} },
+    ]
+  },
+  {
+    id:'P3', blockLabel:'Ciclo y Ovulación', blockTag:'tag-oa',
+    text:'¿Cómo es la duración de tu período cuando llega?',
+    hint: null,
+    opts:[
+      { t:'Entre 2 y 7 días, relativamente constante',                 s:{} },
+      { t:'Muy variable — a veces muy corto, a veces muy largo',      s:{OA:1} },
+      { t:'Generalmente muy escaso o tipo manchado (spotting)',        s:{OA:1} },
+      { t:'Muy abundante con coágulos',                                s:{} },
+    ]
+  },
+  {
+    id:'P4', blockLabel:'Hiperandrogenismo', blockTag:'tag-ha',
+    text:'¿Tienes o has tenido acné persistente después de los 25 años?',
+    hint:'en cara, espalda o pecho',
+    opts:[
+      { t:'No, mi piel es relativamente limpia',                       s:{} },
+      { t:'Sí, especialmente en quijada, cuello o espalda (patrón hormonal)', s:{HA:3} },
+      { t:'Sí, pero solo en frente o nariz (patrón menos hormonal)',   s:{HA:1} },
+      { t:'Tuve acné severo de adolescente que no cedió al tratamiento',s:{HA:2} },
+    ]
+  },
+  {
+    id:'P5', blockLabel:'Hiperandrogenismo', blockTag:'tag-ha',
+    text:'¿Tienes vello en zonas donde normalmente no lo tienen las mujeres?',
+    hint:'bigote, mentón, pecho, abdomen, línea media, muslos internos',
+    opts:[
+      { t:'No tengo vello en esas zonas',                              s:{} },
+      { t:'Sí, en 1 o 2 zonas (bigote leve o línea alba, por ejemplo)',s:{HA:2} },
+      { t:'Sí, en 3 o más zonas de forma visible',                    s:{HA:3} },
+      { t:'Me lo retiro constantemente, no sé si es "mucho"',         s:{HA:2} },
+    ]
+  },
+  {
+    id:'P6', blockLabel:'Hiperandrogenismo', blockTag:'tag-ha',
+    text:'¿Has notado pérdida de cabello en la parte superior de la cabeza?',
+    hint:'o que tu línea del cabello retrocede en las sienes',
+    opts:[
+      { t:'No, mi cabello está bien',                                  s:{} },
+      { t:'Noto más caída de lo normal, especialmente al lavar o peinar',s:{HA:1} },
+      { t:'Sí, hay adelgazamiento visible en la parte superior o corona',s:{HA:3} },
+      { t:'Sí, y ha empeorado con el tiempo',                          s:{HA:3} },
+    ]
+  },
+  {
+    id:'P7', blockLabel:'Hiperandrogenismo', blockTag:'tag-ha',
+    text:'¿Te han reportado niveles elevados de testosterona, DHEA-S o androstenediona?',
+    hint:'en análisis de sangre',
+    opts:[
+      { t:'Sí, me dijeron que tenía andrógenos elevados',             s:{HA:3} },
+      { t:'Mis resultados estaban en rango normal',                    s:{} },
+      { t:'No me han hecho esos estudios',                            s:{} },
+      { t:'Me los hicieron pero no sé interpretar el resultado',      s:{} },
+    ]
+  },
+  {
+    id:'P8', blockLabel:'Ultrasonido', blockTag:'tag-pcom',
+    text:'¿Te han hecho un ultrasonido pélvico o transvaginal para evaluar tus ovarios?',
+    hint: null,
+    skipNext: 3,  // si selecciona índice 3, saltar P9
+    opts:[
+      { t:'Sí, y el reporte mencionó "ovarios poliquísticos", "múltiples folículos" o "imagen en collar de perlas"', s:{PCOM:3} },
+      { t:'Sí, y el reporte dijo que todo estaba normal',             s:{} },
+      { t:'Sí, pero no recuerdo o no me explicaron el resultado',     s:{} },
+      { t:'No me han hecho ultrasonido',                              s:{} },
+    ]
+  },
+  {
+    id:'P9', blockLabel:'Ultrasonido', blockTag:'tag-pcom',
+    text:'¿El médico mencionó el número de folículos o el volumen de tus ovarios?',
+    hint:'esta pregunta solo aplica si tuviste ultrasonido',
+    conditional: true,
+    opts:[
+      { t:'Sí, me dijeron que había más de 20 folículos por ovario o que el ovario estaba agrandado', s:{PCOM:3} },
+      { t:'Me mencionaron folículos pero no recuerdo el número exacto',s:{PCOM:1} },
+      { t:'No tuve ultrasonido / no aplica',                          s:{} },
+    ]
+  },
+  {
+    id:'P10', blockLabel:'Componente Metabólico', blockTag:'tag-ir',
+    text:'¿Te han medido insulina en ayuno, glucosa o el índice HOMA-IR?',
+    hint: null,
+    opts:[
+      { t:'Sí, y me dijeron que tenía insulinoresistencia o glucosa límite o elevada', s:{IR:3} },
+      { t:'Sí, y todos mis resultados estaban normales',              s:{} },
+      { t:'Me midieron glucosa pero no insulina',                     s:{IR:1} },
+      { t:'No me han hecho esos estudios',                            s:{} },
+    ]
+  },
+  {
+    id:'P11', blockLabel:'Componente Metabólico', blockTag:'tag-ir',
+    text:'¿Cómo describirías tu relación con el peso?',
+    hint: null,
+    opts:[
+      { t:'Mi peso es estable y no tengo dificultad para mantenerlo', s:{} },
+      { t:'Me cuesta mucho bajar de peso aunque hago dieta y ejercicio',s:{IR:2} },
+      { t:'Subo de peso con facilidad, especialmente en abdomen',     s:{IR:2} },
+      { t:'Tengo peso normal pero siento que "engordo fácil"',       s:{IR:1} },
+    ]
+  },
+  {
+    id:'P12', blockLabel:'Componente Metabólico', blockTag:'tag-ir',
+    text:'¿Tienes antojos intensos de azúcar o carbohidratos, especialmente en la tarde?',
+    hint:'¿O te sientes con hambre poco después de comer, o muy cansada después de las comidas?',
+    opts:[
+      { t:'No especialmente, mis niveles de energía son estables',    s:{} },
+      { t:'Sí, sobre todo en las tardes necesito algo dulce o me siento muy cansada', s:{IR:2} },
+      { t:'Tengo hambre muy frecuente aunque acabo de comer',        s:{IR:2} },
+      { t:'Después de comer me da mucho sueño o me siento "pesada"', s:{IR:1} },
+    ]
+  },
+  {
+    id:'P13', blockLabel:'Contexto Clínico', blockTag:'tag-ctx',
+    text:'¿Tienes diagnóstico médico confirmado de SOP?',
+    hint:'o te lo han mencionado como posibilidad',
+    opts:[
+      { t:'Sí, tengo diagnóstico confirmado por un médico',           s:{} },
+      { t:'Me lo han mencionado pero nunca recibí un diagnóstico formal', s:{} },
+      { t:'No, estoy explorando si esto podría ser lo que tengo',    s:{} },
+      { t:'Me dijeron que no era SOP pero los síntomas coinciden',   s:{} },
+    ]
+  },
+  {
+    id:'P14', blockLabel:'Contexto Clínico', blockTag:'tag-ctx',
+    text:'¿Estás tomando actualmente algún tratamiento hormonal?',
+    hint:'anticonceptivos, metformina, espironolactona u otro tratamiento para el SOP',
+    opts:[
+      { t:'Sí, anticonceptivos hormonales (pastillas, parche, inyección, DIU hormonal)', s:{} },
+      { t:'Sí, metformina o sensibilizadores de insulina',            s:{} },
+      { t:'Sí, espironolactona u otros anti-androgénicos',           s:{} },
+      { t:'No tomo ningún tratamiento hormonal actualmente',          s:{} },
+    ]
+  },
+];
+
+/* ════════════════════════════════════════════════════════
+   TEXTOS DE RESULTADO
+   ════════════════════════════════════════════════════════ */
+const RESULTS = {
+  'A_con_IR': {
+    key:'A', badge:'Rotterdam A · Con IR', badgeClass:'rb-A',
+    title:'SOP Completo', subtitle:'con componente metabólico',
+    titleClass:'rt-A', subtitleClass:'rs-A', heroClass:'rh-A',
+    criterios:['OA','HA','PCOM'], metabolic:'con',
+    text:`<p>Tu perfil corresponde al <strong>SOP Completo (fenotipo A de Rotterdam)</strong> — la presentación donde los tres criterios diagnósticos están presentes: ciclo irregular, señales de andrógenos elevados y ovarios con morfología poliquística en ultrasonido.</p>
+<p>Que tengas los tres criterios no significa que tu SOP sea "peor" que el de otras mujeres — significa que tienes más puntos de entrada para trabajar. Cada criterio es una palanca.</p>
+<p>Tu perfil también muestra señales de insulinoresistencia. Esto es muy frecuente en el fenotipo A: la combinación de ciclo irregular + andrógenos + IR forma un ciclo que se retroalimenta. Romper ese ciclo es el centro de tu protocolo funcional.</p>`,
+    cta:`El Protocolo SOP Funcional tiene un módulo diseñado específicamente para tu fenotipo — con la guía de laboratorios, el protocolo de alimentación y movimiento orientado a tu perfil, y la suplementación con mayor evidencia para el fenotipo A con componente metabólico.`,
+    ctaClass:'cta-A'
+  },
+  'A_sin_IR': {
+    key:'A', badge:'Rotterdam A · Sin IR', badgeClass:'rb-A',
+    title:'SOP Completo', subtitle:'sin componente metabólico evidente',
+    titleClass:'rt-A', subtitleClass:'rs-A', heroClass:'rh-A',
+    criterios:['OA','HA','PCOM'], metabolic:'sin',
+    text:`<p>Tu perfil corresponde al <strong>SOP Completo (fenotipo A de Rotterdam)</strong> — los tres criterios diagnósticos presentes: ciclo irregular, señales de andrógenos elevados y ovarios con morfología poliquística.</p>
+<p>Que tengas los tres criterios no significa que tu SOP sea "peor" — significa que tienes más puntos de entrada para trabajar.</p>
+<p>Tu perfil no muestra señales marcadas de insulinoresistencia, lo cual es menos común en el fenotipo A pero ocurre. Esto orienta tu protocolo principalmente hacia la modulación androgénica y la restauración del eje reproductivo, con menor énfasis en el manejo metabólico intensivo.</p>`,
+    cta:`El Protocolo SOP Funcional tiene un módulo diseñado para tu fenotipo — con la guía de laboratorios específica, el protocolo adaptado a tu perfil y la suplementación con mayor evidencia para el fenotipo A.`,
+    ctaClass:'cta-A'
+  },
+  'B_con_IR': {
+    key:'B', badge:'Rotterdam B · Con IR', badgeClass:'rb-B',
+    title:'SOP Hormonal', subtitle:'con componente metabólico',
+    titleClass:'rt-B', subtitleClass:'rs-B', heroClass:'rh-B',
+    criterios:['OA','HA'], metabolic:'con',
+    text:`<p>Tu perfil corresponde al <strong>SOP Hormonal (fenotipo B de Rotterdam)</strong> — ciclo irregular y andrógenos elevados, pero sin morfología poliquística confirmada en ultrasonido.</p>
+<p>La ausencia de "quistes" no invalida el diagnóstico: el SOP no son los quistes, son los criterios clínicos y hormonales — y el diagnóstico se hace con dos de tres criterios.</p>
+<p>Tu perfil incluye señales de insulinoresistencia, frecuente en el fenotipo B. La combinación de anovulación + hiperandrogenismo + IR orienta hacia un manejo funcional que trabaje el eje metabólico e inflamatorio como base.</p>`,
+    cta:`El Protocolo SOP Funcional incluye la explicación de por qué el ultrasonido "normal" no descarta tu diagnóstico, la guía de laboratorios relevante para tu fenotipo y el plan de acción concreto para empezar.`,
+    ctaClass:'cta-B'
+  },
+  'B_sin_IR': {
+    key:'B', badge:'Rotterdam B · Sin IR', badgeClass:'rb-B',
+    title:'SOP Hormonal', subtitle:'sin componente metabólico evidente',
+    titleClass:'rt-B', subtitleClass:'rs-B', heroClass:'rh-B',
+    criterios:['OA','HA'], metabolic:'sin',
+    text:`<p>Tu perfil corresponde al <strong>SOP Hormonal (fenotipo B de Rotterdam)</strong> — ciclo irregular y andrógenos elevados, sin morfología poliquística confirmada en ultrasonido. El diagnóstico de SOP no requiere los tres criterios — dos son suficientes.</p>
+<p>Sin señales de insulinoresistencia, tu protocolo se orienta principalmente a la regulación del eje hipotálamo-hipófisis-ovario y a la modulación androgénica, con menor énfasis en el manejo metabólico que en otros fenotipos.</p>`,
+    cta:`El Protocolo SOP Funcional incluye la guía de laboratorios específica para tu fenotipo, el protocolo de intervención diferenciado y la explicación de por qué el ultrasonido normal no descarta tu diagnóstico.`,
+    ctaClass:'cta-B'
+  },
+  'C_con_IR': {
+    key:'C', badge:'Rotterdam C · Con IR', badgeClass:'rb-C',
+    title:'SOP Androgénico', subtitle:'con componente metabólico',
+    titleClass:'rt-C', subtitleClass:'rs-C', heroClass:'rh-C',
+    criterios:['HA','PCOM'], metabolic:'con',
+    text:`<p>Tu perfil corresponde al <strong>SOP Androgénico (fenotipo C de Rotterdam)</strong> — andrógenos elevados y morfología poliquística en ovarios, pero con ciclos menstruales relativamente regulares. Esto significa que ovulas, pero la carga androgénica está presente y tiene impacto clínico.</p>
+<p>Las pacientes con fenotipo C frecuentemente sienten que "no les cuadra el diagnóstico" porque su ciclo es normal. Lo que no es normal es el perfil hormonal y la morfología ovárica — y eso es suficiente.</p>
+<p>Tu perfil también incluye señales de insulinoresistencia — frecuentemente subestimada en este fenotipo porque el ciclo es regular. Tu protocolo trabaja en paralelo la modulación androgénica y el manejo metabólico.</p>`,
+    cta:`El Protocolo SOP Funcional tiene un módulo de suplementación y alimentación diseñado para el perfil androgénico, con la evidencia detrás de cada intervención en lenguaje accesible.`,
+    ctaClass:'cta-C'
+  },
+  'C_sin_IR': {
+    key:'C', badge:'Rotterdam C · Sin IR', badgeClass:'rb-C',
+    title:'SOP Androgénico', subtitle:'sin componente metabólico evidente',
+    titleClass:'rt-C', subtitleClass:'rs-C', heroClass:'rh-C',
+    criterios:['HA','PCOM'], metabolic:'sin',
+    text:`<p>Tu perfil corresponde al <strong>SOP Androgénico (fenotipo C de Rotterdam)</strong> — andrógenos elevados y morfología poliquística, con ciclos regulares. Ovulas, pero tu perfil hormonal e imagen ovárica son suficientes para el diagnóstico.</p>
+<p>Sin insulinoresistencia marcada, tu enfoque principal es la modulación androgénica: alimentación anti-inflamatoria, manejo del eje adrenal y suplementación dirigida. Es el fenotipo con mayor respuesta a intervenciones no farmacológicas bien dirigidas.</p>`,
+    cta:`El Protocolo SOP Funcional tiene un módulo específicamente diseñado para el perfil androgénico, con la evidencia detrás de cada intervención en lenguaje accesible.`,
+    ctaClass:'cta-C'
+  },
+  'D_con_IR': {
+    key:'D', badge:'Rotterdam D · Con IR', badgeClass:'rb-D',
+    title:'SOP Silencioso', subtitle:'con componente metabólico',
+    titleClass:'rt-D', subtitleClass:'rs-D', heroClass:'rh-D',
+    criterios:['OA','PCOM'], metabolic:'con',
+    text:`<p>Tu perfil corresponde al <strong>SOP Silencioso (fenotipo D de Rotterdam)</strong> — ciclo irregular y morfología poliquística en ovarios, pero sin hiperandrogenismo clínico ni bioquímico. No hay acné marcado, no hay vello excesivo, no hay alopecia androgénica.</p>
+<p>Esto lo convierte en el fenotipo más frecuentemente pasado por alto. Si llegaste aquí, ya tienes una ventaja importante.</p>
+<p>Tu perfil muestra señales de insulinoresistencia. En el fenotipo D esto es especialmente relevante — la evidencia sugiere que la IR puede ser el factor que mantiene la anovulación activa en ausencia de hiperandrogenismo. Trabajar el eje metabólico es el centro de tu protocolo funcional, aunque la evidencia específica para este fenotipo es aún más limitada que para A y B.</p>`,
+    cta:`El Protocolo SOP Funcional incluye la guía de laboratorios específica para el fenotipo D con componente metabólico — incluyendo los estudios que descartan otras causas de anovulación y los pasos concretos para iniciar el manejo funcional.`,
+    ctaClass:'cta-D'
+  },
+  'D_sin_IR': {
+    key:'D', badge:'Rotterdam D · Sin IR', badgeClass:'rb-D',
+    title:'SOP Silencioso', subtitle:'sin componente metabólico evidente',
+    titleClass:'rt-D', subtitleClass:'rs-D', heroClass:'rh-D',
+    criterios:['OA','PCOM'], metabolic:'sin',
+    text:`<p>Tu perfil corresponde al <strong>SOP Silencioso (fenotipo D de Rotterdam)</strong> — ciclo irregular y morfología poliquística en ovarios, pero sin hiperandrogenismo clínico ni bioquímico. No hay acné marcado, no hay vello excesivo, no hay alopecia androgénica.</p>
+<p>Esto lo convierte en el fenotipo más frecuentemente pasado por alto. Si llegaste aquí, ya tienes una ventaja importante.</p>
+<p>Tu perfil no muestra señales marcadas de insulinoresistencia. En el fenotipo D la evidencia sobre el perfil metabólico es aún limitada, por lo que el primer paso de tu protocolo incluye una evaluación formal de insulina y HOMA-IR para confirmar este hallazgo y orientar el manejo con mayor precisión.</p>`,
+    cta:`El Protocolo SOP Funcional incluye la guía de laboratorios específica para el fenotipo D — incluyendo los estudios que descartan otras causas de anovulación y los pasos concretos para iniciar el manejo funcional con la información disponible.`,
+    ctaClass:'cta-D'
+  },
+  'NC': {
+    key:'NC', badge:'Perfil no concluyente', badgeClass:'rb-NC',
+    title:'Resultado no concluyente', subtitle:'se necesitan más estudios',
+    titleClass:'rt-NC', subtitleClass:'rs-NC', heroClass:'rh-NC',
+    criterios:[], metabolic:null,
+    text:`<p>Tu perfil no muestra suficientes criterios para orientar hacia un fenotipo específico de SOP — lo cual puede significar que el diagnóstico no aplica en tu caso, que faltan estudios para completar la evaluación (especialmente ultrasonido e insulina), o que tus síntomas tienen otra causa que merece atención.</p>
+<p>Esto no es un resultado "negativo" — es información. Muchas pacientes con SOP llegan sin estudios completos, y el quiz no puede discriminar fenotipo sin datos de los tres criterios de Rotterdam.</p>`,
+    cta:`El primer paso recomendable es una consulta con un especialista en salud hormonal femenina con los estudios completos de laboratorio e imagen — incluyendo un perfil hormonal completo y ultrasonido transvaginal.`,
+    ctaClass:'cta-NC'
+  },
+};
+
+/* ════════════════════════════════════════════════════════
+   ESTADO DE LA APLICACIÓN
+   ════════════════════════════════════════════════════════ */
+const state = {
+  scores:       { OA:0, HA:0, PCOM:0, IR:0 },
+  currentQIdx:  0,
+  selectedOpt:  null,
+  skipP9:       false,
+  history:      [],   // [{qIdx, optIdx}]
+  email:        '',
+  resultKey:    '',
+};
+
+/* ════════════════════════════════════════════════════════
+   NAVEGACIÓN ENTRE PANTALLAS
+   ════════════════════════════════════════════════════════ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ════════════════════════════════════════════════════════
+   LÓGICA DEL QUIZ
+   ════════════════════════════════════════════════════════ */
+function startQuiz() {
+  resetState();
+  showScreen('s-question');
+  renderQuestion();
+}
+
+function resetState() {
+  state.scores      = { OA:0, HA:0, PCOM:0, IR:0 };
+  state.currentQIdx = 0;
+  state.selectedOpt = null;
+  state.skipP9      = false;
+  state.history     = [];
+  state.email       = '';
+  state.resultKey   = '';
+}
+
+function totalQuestions() {
+  return state.skipP9 ? 13 : 14;
+}
+
+function answeredCount() {
+  return state.history.length;
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[state.currentQIdx];
+  const total = totalQuestions();
+  const answered = answeredCount();
+  const pct = Math.round((answered / total) * 100);
+  const letters = ['A','B','C','D','E'];
+
+  // Update progress
+  document.getElementById('progress-label').textContent = `Pregunta ${answered + 1} de ${total}`;
+  document.getElementById('progress-pct').textContent   = `${pct}%`;
+  document.getElementById('progress-fill').style.width  = `${pct}%`;
+
+  // Build question HTML
+  const hintHTML = q.hint
+    ? `<p class="q-hint">${q.hint}</p>`
+    : '';
+
+  const optsHTML = q.opts.map((o, i) => `
+    <button
+      class="opt-btn"
+      data-idx="${i}"
+      onclick="selectOption(${i})"
+      aria-label="Opción ${letters[i]}: ${o.t}"
+    >
+      <span class="opt-letter">${letters[i]}</span>
+      <span>${o.t}</span>
+    </button>
+  `).join('');
+
+  document.getElementById('q-body').innerHTML = `
+    <span class="q-block-tag ${q.blockTag}">${q.blockLabel}</span>
+    <h2 class="q-text">${q.text}</h2>
+    ${hintHTML}
+    <div class="options-list">${optsHTML}</div>
+    <button class="btn-next" id="btn-next" onclick="goNext()">
+      Continuar
+      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+      </svg>
+    </button>
+  `;
+
+  state.selectedOpt = null;
+}
+
+function selectOption(idx) {
+  state.selectedOpt = idx;
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.opt-btn')[idx].classList.add('selected');
+  const btn = document.getElementById('btn-next');
+  if (btn) btn.classList.add('visible');
+}
+
+function goNext() {
+  if (state.selectedOpt === null) return;
+
+  const q = QUESTIONS[state.currentQIdx];
+  const opt = q.opts[state.selectedOpt];
+
+  // Apply scores
+  for (const [k, v] of Object.entries(opt.s || {})) {
+    state.scores[k] = (state.scores[k] || 0) + v;
+  }
+
+  // Handle P8 skip logic
+  if (state.currentQIdx === 7 && state.selectedOpt === 3) {
+    state.skipP9 = true;
+  }
+
+  // Store in history
+  state.history.push({ qIdx: state.currentQIdx, optIdx: state.selectedOpt });
+
+  // Find next question index
+  let next = state.currentQIdx + 1;
+  if (state.skipP9 && next === 8) next = 9;
+
+  if (next >= QUESTIONS.length) {
+    showScreen('s-email');
+    setTimeout(() => document.getElementById('email-input').focus(), 300);
+    return;
+  }
+
+  state.currentQIdx = next;
+  state.selectedOpt = null;
+
+  // Animate transition
+  const body = document.getElementById('q-body');
+  body.style.animation = 'none';
+  requestAnimationFrame(() => {
+    body.style.animation = '';
+    renderQuestion();
+  });
+}
+
+function goBack() {
+  if (state.history.length === 0) {
+    showScreen('s-welcome');
+    return;
+  }
+
+  // Pop last answer
+  const last = state.history.pop();
+
+  // Recompute scores from scratch
+  state.scores = { OA:0, HA:0, PCOM:0, IR:0 };
+  state.skipP9 = false;
+  for (const {qIdx, optIdx} of state.history) {
+    const o = QUESTIONS[qIdx].opts[optIdx];
+    for (const [k,v] of Object.entries(o.s || {})) {
+      state.scores[k] = (state.scores[k] || 0) + v;
+    }
+    if (qIdx === 7 && optIdx === 3) state.skipP9 = true;
+  }
+
+  state.currentQIdx = last.qIdx;
+  state.selectedOpt = null;
+  renderQuestion();
+}
+
+/* ════════════════════════════════════════════════════════
+   CAPTURA DE CORREO
+   ════════════════════════════════════════════════════════ */
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
+
+async function submitEmail() {
+  const input = document.getElementById('email-input');
+  const errEl = document.getElementById('field-error');
+  const email = input.value.trim();
+
+  if (!email) {
+    errEl.textContent = 'Por favor ingresa tu correo.';
+    input.focus();
+    return;
+  }
+  if (!isValidEmail(email)) {
+    errEl.textContent = 'Ingresa un correo válido.';
+    input.focus();
+    return;
+  }
+
+  errEl.textContent = '';
+  state.email = email;
+
+  showScreen('s-loading');
+
+  // Calculate result
+  const key = calcResultKey();
+  state.resultKey = key;
+
+  // Send to integration (non-blocking for UX)
+  sendToIntegration(email, key).catch(() => {});
+
+  // Show result after brief delay
+  setTimeout(() => {
+    renderResult(key);
+    showScreen('s-result');
+  }, 1600);
+}
+
+/* ════════════════════════════════════════════════════════
+   ALGORITMO DE FENOTIPO ROTTERDAM
+   ════════════════════════════════════════════════════════ */
+function calcResultKey() {
+  const { OA, HA, PCOM, IR } = state.scores;
+  const oa   = OA   >= 3;
+  const ha   = HA   >= 3;
+  const pcom = PCOM >= 3;
+  const ir   = IR   >= 4;
+
+  if      (oa && ha && pcom)  return ir ? 'A_con_IR' : 'A_sin_IR';
+  else if (oa && ha && !pcom) return ir ? 'B_con_IR' : 'B_sin_IR';
+  else if (!oa && ha && pcom) return ir ? 'C_con_IR' : 'C_sin_IR';
+  else if (oa && !ha && pcom) return ir ? 'D_con_IR' : 'D_sin_IR';
+  else                        return 'NC';
+}
+
+/* ════════════════════════════════════════════════════════
+   RENDERIZADO DEL RESULTADO
+   ════════════════════════════════════════════════════════ */
+function renderResult(key) {
+  const r = RESULTS[key];
+  const chipColors = { A:'chip-on-A', B:'chip-on-B', C:'chip-on-C', D:'chip-on-D' };
+  const chipColor  = chipColors[r.key] || 'chip-on-A';
+
+  // Build criterio chips — all four criteria, active/inactive
+  const allCriterios = ['OA','HA','PCOM'];
+  const criterioLabels = { OA:'Ciclo irregular', HA:'Hiperandrogenismo', PCOM:'Morfología poliquística' };
+  const chipsHTML = allCriterios.map(c => {
+    const active = r.criterios.includes(c);
+    const cls    = active ? chipColor : 'chip-off';
+    const mark   = active ? '✓ ' : '✗ ';
+    return `<span class="chip ${cls}">${mark}${criterioLabels[c]}</span>`;
+  }).join('');
+
+  // Hero
+  document.getElementById('result-hero').className = `result-hero ${r.heroClass}`;
+  document.getElementById('result-hero').innerHTML = `
+    <span class="res-badge ${r.badgeClass}">${r.badge}</span>
+    <h2 class="res-title ${r.titleClass}">${r.title}</h2>
+    <p class="res-subtitle ${r.subtitleClass}">${r.subtitle}</p>
+    <div class="res-chips">${chipsHTML}</div>
+  `;
+
+  // Metabolic modifier strip
+  let metabolicHTML = '';
+  if (r.metabolic === 'con') {
+    metabolicHTML = `<div class="metabolic-strip ms-con">⚡ Con componente metabólico (insulinoresistencia)</div>`;
+  } else if (r.metabolic === 'sin') {
+    metabolicHTML = `<div class="metabolic-strip ms-sin">✓ Sin componente metabólico evidente</div>`;
+  }
+
+  // Body
+  document.getElementById('result-body').innerHTML = `
+    ${metabolicHTML}
+    <div class="res-text-card">${r.text}</div>
+    <div class="cta-card ${r.ctaClass}">${r.cta}</div>
+    <div class="disclaimer-card">
+      <strong>Este resultado es orientativo — no es un diagnóstico.</strong> El diagnóstico de SOP lo confirma tu médico con los criterios clínicos completos de Rotterdam, estudios de laboratorio e imagen. Si tienes dudas sobre tu salud hormonal, consulta con un especialista.
+    </div>
+    <div class="restart-row">
+      <button class="btn-restart" onclick="restartQuiz()">Repetir el quiz</button>
+    </div>
+  `;
+}
+
+function restartQuiz() {
+  showScreen('s-welcome');
+}
+
+/* ════════════════════════════════════════════════════════
+   INTEGRACIÓN — BREVO / APPS SCRIPT
+   ════════════════════════════════════════════════════════ */
+async function sendToIntegration(email, resultKey) {
+  const r = RESULTS[resultKey];
+  const payload = {
+    email,
+    fenotipo:       r.key === 'NC' ? 'No concluyente' : `Rotterdam ${r.key}`,
+    fenotipoNombre: r.title,
+    modificadorIR:  r.metabolic === 'con' ? 'Con componente metabólico'
+                  : r.metabolic === 'sin' ? 'Sin componente metabólico'
+                  : 'Pendiente de evaluación',
+    scoreOA:   state.scores.OA,
+    scoreHA:   state.scores.HA,
+    scorePCOM: state.scores.PCOM,
+    scoreIR:   state.scores.IR,
+  };
+
+  // ─── OPCIÓN A: Google Apps Script (recomendada) ──────
+  if (CONFIG.APPS_SCRIPT_URL) {
+    const res = await fetch(CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      body:   JSON.stringify(payload),
+    });
+    if (res.ok) showToast('✓ Correo registrado correctamente');
+    return;
+  }
+
+  // ─── OPCIÓN B: Brevo API directo ─────────────────────
+  if (CONFIG.BREVO_API_KEY) {
+    const brevoPayload = {
+      email,
+      attributes: {
+        FENOTIPO:        payload.fenotipo,
+        FENOTIPO_NOMBRE: payload.fenotipoNombre,
+        MODIFICADOR_IR:  payload.modificadorIR,
+        SCORE_OA:        payload.scoreOA,
+        SCORE_HA:        payload.scoreHA,
+        SCORE_PCOM:      payload.scorePCOM,
+        SCORE_IR:        payload.scoreIR,
+      },
+      listIds:       CONFIG.BREVO_LIST_ID ? [CONFIG.BREVO_LIST_ID] : [],
+      updateEnabled: true,
+    };
+    const res = await fetch('https://api.brevo.com/v3/contacts', {
+      method:  'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key':      CONFIG.BREVO_API_KEY,
+      },
+      body: JSON.stringify(brevoPayload),
+    });
+    if (res.ok || res.status === 204) showToast('✓ Correo registrado en Brevo');
+    return;
+  }
+
+  // Sin configuración — solo mostrar resultado (útil para pruebas)
+  console.warn('Quiz SOP: No hay integración configurada. Revisar CONFIG en el código.');
+}
+
+/* ════════════════════════════════════════════════════════
+   TOAST
+   ════════════════════════════════════════════════════════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+
+<!--
+═══════════════════════════════════════════════════════════
+  CÓDIGO DE GOOGLE APPS SCRIPT (OPCIÓN A)
+  
+  Instrucciones:
+  1. Ve a script.google.com → Nuevo proyecto
+  2. Borra el código predeterminado
+  3. Pega el código de abajo (sin las líneas de comentario)
+  4. Reemplaza SHEET_ID con el ID de tu Google Sheet
+     (lo encuentras en la URL: .../spreadsheets/d/AQUI/edit)
+  5. Reemplaza BREVO_API_KEY y BREVO_LIST_ID
+  6. Guarda el proyecto
+  7. Clic en "Implementar" → "Nueva implementación"
+     - Tipo: Aplicación web
+     - Ejecutar como: Yo
+     - Acceso: Cualquier persona
+  8. Copia la URL y pégala en CONFIG.APPS_SCRIPT_URL del HTML
+  
+─────────────────────────────────────────────────────────
+
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+
+    // ── 1. Escribir en Google Sheets ──────────────
+    const SHEET_ID  = 'TU_SHEET_ID_AQUI';
+    const sheet = SpreadsheetApp.openById(SHEET_ID).getActiveSheet();
+    
+    // Crear encabezados si es la primera fila
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        'Fecha','Email','Fenotipo','Nombre Fenotipo',
+        'Modificador IR','Score OA','Score HA','Score PCOM','Score IR'
+      ]);
+    }
+    
+    sheet.appendRow([
+      new Date(),
+      data.email,
+      data.fenotipo,
+      data.fenotipoNombre,
+      data.modificadorIR,
+      data.scoreOA,
+      data.scoreHA,
+      data.scorePCOM,
+      data.scoreIR,
+    ]);
+
+    // ── 2. Enviar a Brevo ──────────────────────────
+    const BREVO_API_KEY = 'TU_API_KEY_BREVO';
+    const BREVO_LIST_ID = 0; // Reemplaza con tu ID de lista
+
+    const brevoPayload = {
+      email:         data.email,
+      attributes: {
+        FENOTIPO:        data.fenotipo,
+        FENOTIPO_NOMBRE: data.fenotipoNombre,
+        MODIFICADOR_IR:  data.modificadorIR,
+        SCORE_OA:        data.scoreOA,
+        SCORE_HA:        data.scoreHA,
+        SCORE_PCOM:      data.scorePCOM,
+        SCORE_IR:        data.scoreIR,
+      },
+      listIds:       BREVO_LIST_ID ? [BREVO_LIST_ID] : [],
+      updateEnabled: true,
+    };
+
+    const options = {
+      method:      'post',
+      contentType: 'application/json',
+      headers:     { 'api-key': BREVO_API_KEY },
+      payload:     JSON.stringify(brevoPayload),
+      muteHttpExceptions: true,
+    };
+
+    UrlFetchApp.fetch('https://api.brevo.com/v3/contacts', options);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch(err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: false, error: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+─────────────────────────────────────────────────────────
+
+  ATRIBUTOS PERSONALIZADOS EN BREVO (crear antes del primer uso):
+  Settings → Contact attributes → Add attribute
+  
+  Nombre exacto    │ Tipo
+  ─────────────────┼────────
+  FENOTIPO         │ Texto
+  FENOTIPO_NOMBRE  │ Texto
+  MODIFICADOR_IR   │ Texto
+  SCORE_OA         │ Número
+  SCORE_HA         │ Número
+  SCORE_PCOM       │ Número
+  SCORE_IR         │ Número
+
+═══════════════════════════════════════════════════════════
+-->
+</body>
+</html>
